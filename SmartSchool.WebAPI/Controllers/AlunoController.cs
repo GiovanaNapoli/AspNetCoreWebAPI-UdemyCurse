@@ -11,80 +11,85 @@ namespace SmartSchool.WebAPI.Controllers
     [Route("api/[controller]")]
     public class AlunoController : ControllerBase
     {
-        private readonly SmartContext _context;
+        public readonly IRepository _repo;
 
-        public AlunoController(SmartContext context)
+        public AlunoController( IRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_context.Alunos);
+            var result = _repo.GetAllAlunos(true);
+
+            return Ok(result);
         }
 
-        [HttpGet("byId/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
+            var aluno = _repo.GetAlunoById(id, false);
 
-            if(aluno == null) return BadRequest("Aluno não encontrado");
-
-            return Ok(aluno);
-        }
-
-        [HttpGet("byName")]
-        public IActionResult GetByName(string nome, string sobrenome)
-        {
-            var aluno = _context.Alunos.FirstOrDefault(a => 
-                a.Nome.Contains(nome) && a.Sobrenome.Contains(sobrenome)
-            );
-
-            if(aluno == null) return BadRequest("Aluno não encontrado");
+            if (aluno == null) return BadRequest("Aluno não encontrado");
 
             return Ok(aluno);
         }
+
         [HttpPost]
         public IActionResult Post(Aluno aluno)
         {
-            _context.Add(aluno);
-            _context.SaveChanges();
-            return Ok(aluno);
+
+            _repo.Add(aluno);
+            if(_repo.SaveChanges()){
+                return Ok(aluno);
+            }
+            return BadRequest("Aluno não cadastrado");
+
+            // _repo.Add(aluno);
+            // var result = _repo.SaveChanges() ? "Aluno cadastrado" : BadRequest("Erro ao cadastrar");
+            // return Ok(result);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno aluno)
         {
 
-            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
-            if(alu == null) return BadRequest("Aluno não encontrado");
+            var alu = _repo.GetAlunoById(id, false);
+            if (alu == null) return BadRequest("Aluno não encontrado");
 
-            _context.Update(aluno);
-            _context.SaveChanges();
-            return Ok(aluno);
+            _repo.Update(aluno);
+            if(_repo.SaveChanges()){
+                return Ok(aluno);
+            }
+            return BadRequest("Aluno não atualizado");
         }
 
         [HttpPatch("{id}")]
-        public IActionResult Patch(int id, Aluno aluno) { 
+        public IActionResult Patch(int id, Aluno aluno)
+        {
 
-            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
-            if(alu == null) return BadRequest("Aluno não encontrado");
+            var alu = _repo.GetAlunoById(id, false);
+            if (alu == null) return BadRequest("Aluno não encontrado");
 
-            _context.Update(aluno);
-            _context.SaveChanges();
-            return Ok(aluno);
-         }
+            _repo.Update(aluno);
+            if(_repo.SaveChanges()){
+                return Ok(aluno);
+            }
+            return BadRequest("Aluno não atualizado");
+        }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
-            if(aluno == null) return BadRequest("Aluno não encontrado");
+            var aluno = _repo.GetAlunoById(id, false);
+            if (aluno == null) return BadRequest("Aluno não encontrado");
 
-            _context.Remove(aluno);
-            _context.SaveChanges();
-            return Ok();
+            _repo.Delete(aluno);
+            if(_repo.SaveChanges()){
+                return Ok("Aluno Deletado");
+            }
+            return BadRequest("Aluno não Deletado");
         }
     }
 }
