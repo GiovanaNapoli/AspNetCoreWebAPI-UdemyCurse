@@ -10,6 +10,7 @@ import { Aluno } from 'src/app/model/aluno';
 import { Professor } from 'src/app/model/professor';
 import { AlunoService } from 'src/app/services/aluno.service';
 import { ProfessorService } from 'src/app/services/professor.service';
+import { PaginatedResult, Pagination } from 'src/app/model/Pagination';
 
 @Component({
   selector: 'app-alunos',
@@ -17,19 +18,20 @@ import { ProfessorService } from 'src/app/services/professor.service';
   styleUrls: ['./alunos.component.scss'],
 })
 export class AlunosComponent implements OnInit, OnDestroy {
+
   public modalRef: BsModalRef;
   public alunoForm: FormGroup;
   public titulo = 'Alunos';
   public alunoSelecionado: Aluno;
   public textSimple: string;
   public profsAlunos: Professor[];
-
-  private unsubscriber = new Subject();
-
   public alunos: Aluno[];
   public aluno: Aluno;
-  public msnDeleteAluno: string;
   public modeSave = 'post';
+  public msnDeleteAluno: string;
+  pagination: Pagination;
+
+  private unsubscriber = new Subject();
 
   constructor(
     private alunoService: AlunoService,
@@ -44,6 +46,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.pagination = {currentPage: 1, itemsPerPage: 4} as Pagination;
     this.carregarAlunos();
   }
 
@@ -130,11 +133,12 @@ export class AlunosComponent implements OnInit, OnDestroy {
 
     this.spinner.show();
     this.alunoService
-      .getAll()
+      .getAll(this.pagination.currentPage, this.pagination.itemsPerPage)
       .pipe(takeUntil(this.unsubscriber))
       .subscribe(
-        (alunos: Aluno[]) => {
-          this.alunos = alunos;
+        (alunos: PaginatedResult<Aluno[]>) => {
+          this.alunos = alunos.result;
+          this.pagination = alunos.pagination;
 
           if (id > 0) {
             this.alunoSelect(id);
@@ -149,6 +153,11 @@ export class AlunosComponent implements OnInit, OnDestroy {
         },
         () => this.spinner.hide()
       );
+  }
+
+  pageChanged(event: any): void{
+    this.pagination.currentPage = event.page;
+    this.carregarAlunos();
   }
 
   alunoSelect(alunoId: number): void {

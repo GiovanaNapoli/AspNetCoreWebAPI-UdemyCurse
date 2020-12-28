@@ -4,7 +4,9 @@
       <app-titulo [titulo]="'Detalhe'"></app-titulo>
     </div>
     <div class="mt-1">
-      <button class="btn btn-warning" (click)="voltar()">Lista de Professores</button>
+      <button class="btn btn-warning" (click)="voltar()">
+        Lista de Professores
+      </button>
     </div>
   </div>
 
@@ -27,7 +29,10 @@
             <td>{{disciplina.nome}}</td>
             <td>
               <div class="btn-group">
-                <button (click)="openModal(template, disciplina.id)" class="btn btn-sm btn-outline-primary">Alunos</button>
+                <button (click)="openModal(template, disciplina.id)"
+                  class="btn btn-sm btn-outline-primary">
+                  Alunos
+                </button>
               </div>
             </td>
           </tr>
@@ -37,11 +42,13 @@
   </form>
 </div>
 
-<ng-template>
+<ng-template #template>
   <div class="modal-body">
     <app-alunos-professores (closeModal)="closeModal()" [alunos]="alunosProfs"></app-alunos-professores>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-pull-right" aria-label="Close" (click)="modalRef.hide()" >FECHAR</button>
+    <button type="button" class="btn btn-pull-right" aria-label="Close" (click)="modalRef.hide()" >
+      FECHAR
+    </button>
   </div>
 </ng-template>

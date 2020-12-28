@@ -11,6 +11,8 @@ import {ModalModule} from 'ngx-bootstrap/modal';
 
 import { AppRoutingModule } from './app-routing.module';
 
+import {PaginationModule} from 'ngx-bootstrap/pagination';
+
 import { AppComponent } from './app.component';
 import { AlunosComponent } from './components/alunos/alunos.component';
 import { ProfessoresComponent } from './components/professores/professores.component';
@@ -43,6 +45,7 @@ import { AlunosProfessoresComponent } from './components/professores/alunos-prof
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    PaginationModule.forRoot(),
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     ToastrModule.forRoot({

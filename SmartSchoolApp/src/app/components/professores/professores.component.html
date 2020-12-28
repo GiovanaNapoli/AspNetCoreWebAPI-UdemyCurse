@@ -1,8 +1,8 @@
 <div>
   <app-titulo [titulo]="'Professores'"></app-titulo>
 
-  <table class="table table-hover">
-    <thead>
+  <table class=" table table-hover">
+    <thead class="thead-light">
       <tr>
         <th>Visualizar</th>
         <th scope="col">#</th>
@@ -13,7 +13,7 @@
     <tbody>
       <tr *ngFor="let prof of professores">
         <td>
-          <a [routerLink] = "['/professor/', prof.id]" class="text-dark btn btn-sm btn-outline-warning">Detalhe</a>
+          <a [routerLink]="['/professor/', prof.id]" class="text-dark btn btn-sm btn-outline-warning">Detalhe</a>
         </td>
         <th scope="row"> {{prof.id}} </th>
         <td> {{prof.nome}} </td>

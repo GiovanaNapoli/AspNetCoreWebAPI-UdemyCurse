@@ -62,6 +62,12 @@ namespace SmartSchool.WebAPI.Controllers
 
             return Ok(alunoDto);
         }
+        [HttpGet("ByDisciplina/{id}")]
+        public async Task<IActionResult> GetDisciplinaById(int id)
+        {
+            var result = await _repo.GetAllAlunosByDisciplinasAsync(id, false);
+            return Ok(result);
+        }
 
         [HttpPost]
         public IActionResult Post(AlunoRegistrarDto model)

@@ -24,7 +24,8 @@ export class ProfessorDetalheComponent implements OnInit, OnDestroy {
 
   private unsubscriber = new Subject();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private professorService: ProfessorService,
     private alunoService: AlunoService,
